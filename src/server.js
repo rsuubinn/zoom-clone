@@ -17,10 +17,16 @@ const handleListening = () => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-const handleConnection = (frontSocket) => {
-  console.log(frontSocket);
-};
-
-wss.on("connection", handleConnection);
+//backend
+wss.on("connection", (backSocket) => {
+  console.log("Connected to browser ✅");
+  backSocket.on("close", () => {
+    console.log("Disconnedted to browser ❌");
+  });
+  backSocket.on("message", (message) => {
+    console.log(message.toString("utf8"));
+  });
+  backSocket.send("Hello! from the server");
+});
 
 server.listen(3000, handleListening);
