@@ -15,6 +15,12 @@ const handleListening = () => {
 };
 
 const server = http.createServer(app);
-const webSocketServer = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ server });
+
+const handleConnection = (frontSocket) => {
+  console.log(frontSocket);
+};
+
+wss.on("connection", handleConnection);
 
 server.listen(3000, handleListening);
