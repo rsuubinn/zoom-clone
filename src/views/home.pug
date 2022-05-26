@@ -8,8 +8,11 @@ html(lang="en")
     header
       h1 Zoom
     main
+      form#nickname
+        input(type="text", placeholder="닉네임", required)
+        input(type="submit", value="만들기")
       ul
-      form
+      form#message
         input(type="text", placeholder="메세지를 입력하세요.", required)
         input(type="submit", value="보내기")
     script(src="/public/js/app.js")  
