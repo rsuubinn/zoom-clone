@@ -1,4 +1,6 @@
 //frontend
+const messageList = document.querySelector("ul");
+const messageForm = document.querySelector("form");
 const frontSocket = new WebSocket(`ws://${window.location.host}`);
 
 frontSocket.addEventListener("open", () => {
@@ -13,6 +15,11 @@ frontSocket.addEventListener("close", () => {
   console.log("Disconnected to server ❌");
 });
 
-setTimeout(() => {
-  frontSocket.send("hello from the browser");
-}, 5000);
+function handleSubmit(event) {
+  event.preventDefault();
+  const input = messageForm.querySelector("input");
+  frontSocket.send(input.value);
+  input.value = "";
+}
+
+messageForm.addEventListener("submit", handleSubmit);
