@@ -34,6 +34,7 @@ function handleNicknameSubmit(event) {
   event.preventDefault();
   const input = nicknameForm.querySelector("input");
   frontSocket.send(makeMessage("nickname", input.value));
+  input.value = "";
 }
 
 messageForm.addEventListener("submit", handleMessageSubmit);
