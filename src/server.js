@@ -1,5 +1,6 @@
 import http from "http";
 import WebSocket from "ws";
+import SocketIO from "socket.io";
 import express from "express";
 
 const app = express();
@@ -10,34 +11,42 @@ app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (req, res) => res.render("home"));
 app.get("/*", (req, res) => res.redirect("/"));
 
+const httpServer = http.createServer(app);
+const wsServer = SocketIO(httpServer);
+
+wsServer.on("connection", (socket) => {
+  console.log(socket);
+});
+
+// const server = http.createServer(app);
+// const wss = new WebSocket.Server({ server });
+
+// const sockets = [];
+
+// //backend
+// wss.on("connection", (backSocket) => {
+//   sockets.push(backSocket);
+//   backSocket["nickname"] = "Anonymous";
+//   console.log("Connected to browser ✅");
+//   backSocket.on("close", () => {
+//     console.log("Disconnedted to browser ❌");
+//   });
+//   backSocket.on("message", (msg) => {
+//     const message = JSON.parse(msg);
+//     switch (message.type) {
+//       case "new_message":
+//         sockets.forEach((aSocket) =>
+//           aSocket.send(`${backSocket.nickname}: ${message.payload}`)
+//         );
+//         break;
+//       case "nickname":
+//         backSocket["nickname"] = message.payload;
+//         break;
+//     }
+//   });
+// });
+
 const handleListening = () => {
   console.log(`Listening on http://localhost:3000`);
 };
-
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
-const sockets = [];
-
-//backend
-wss.on("connection", (backSocket) => {
-  sockets.push(backSocket);
-  backSocket["nickname"] = "Anonymous";
-  console.log("Connected to browser ✅");
-  backSocket.on("close", () => {
-    console.log("Disconnedted to browser ❌");
-  });
-  backSocket.on("message", (msg) => {
-    const message = JSON.parse(msg);
-    switch (message.type) {
-      case "new_message":
-        sockets.forEach((aSocket) =>
-          aSocket.send(`${backSocket.nickname}: ${message.payload}`)
-        );
-      case "nickname":
-        backSocket["nickname"] = message.payload;
-    }
-  });
-});
-
-server.listen(3000, handleListening);
+httpServer.listen(3000, handleListening);
