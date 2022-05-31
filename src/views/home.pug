@@ -1,22 +1,25 @@
 doctype html
 html(lang="en")
-  head
-    link(rel="stylesheet", href="https://unpkg.com/mvp.css")
-    meta(charset="UTF-8")
-    title Zoom 
-  body
-    header
-      h1 Zoom
-    main
-      div#welcome
-        form  
-          input(type="text", placeholder="채널 이름", required)
-          input(type="submit", value="만들기")
-      div#room
-        h3 
-        ul
-        form  
-          input(type="text", placeholder="메세지를 입력하세요.", required)
-          input(type="submit", value="보내기")
-    script(src="/socket.io/socket.io.js")
-    script(src="/public/js/app.js")  
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Zoom
+        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    body
+        header
+            h1 Zoom
+        main
+            div#welcome
+                form
+                    input(placeholder="방 이름", required, type="text")#roomname
+                    input(placeholder="닉네임", required, type="text")#nickname
+                    button 입장
+            div#room
+                h3
+                ul
+                form#msg
+                    input(placeholder="메세지를 입력하세요.", required, type="text")
+                    button 보내기
+        script(src="/socket.io/socket.io.js") 
+        script(src="/public/js/app.js") 
