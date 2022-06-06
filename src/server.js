@@ -48,7 +48,7 @@ wsServer.on("connection", (socket) => {
     socket["nickname"] = nickname;
     done();
     socket.to(roomName).emit("welcome", socket.nickname, countRoom(roomName));
-    wsServer.socket.emit("room_change", publicRooms());
+    wsServer.sockets.emit("room_change", publicRooms());
   });
   socket.on("disconnecting", () => {
     socket.rooms.forEach((room) =>
@@ -56,7 +56,7 @@ wsServer.on("connection", (socket) => {
     );
   });
   socket.on("disconnect", () => {
-    wsServer.socket.emit("room_change", publicRooms());
+    wsServer.sockets.emit("room_change", publicRooms());
   });
   socket.on("new_message", (msg, room, done) => {
     socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
