@@ -14,5 +14,11 @@ html(lang="en")
                 form
                     input(placeholder="방이름" type="text" required)
                     button 입장하기
+            div#room
+                h3
+                ul
+                form
+                    input(placeholder="메세지를 입력하세요." type="text" required)
+                    button 보내기
         script(src="/socket.io/socket.io.js")
         script(src="/public/js/app.js") 

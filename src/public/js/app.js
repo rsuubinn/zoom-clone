@@ -1,13 +1,26 @@
 const socket = io();
 
-const welcome = document.querySelector("#welcome");
+const welcome = document.getElementById("welcome");
+const room = document.getElementById("room");
 const form = welcome.querySelector("form");
 
-function handleSubmit(event) {
+room.hidden = true;
+
+let roomName;
+
+function showRoom() {
+  welcome.hidden = true;
+  room.hidden = false;
+  const h3 = room.querySelector("h3");
+  h3.innerText = `방이름 : ${roomName}`;
+}
+
+function handleRoomSubmit(event) {
   event.preventDefault();
   const input = form.querySelector("input");
-  socket.emit("enter_room", { payload: input.value });
+  socket.emit("enter_room", input.value, showRoom);
+  roomName = input.value;
   input.value = "";
 }
 
-form.addEventListener("submit", handleSubmit);
+form.addEventListener("submit", handleRoomSubmit);
