@@ -15,6 +15,13 @@ function showRoom() {
   h3.innerText = `방이름 : ${roomName}`;
 }
 
+function addMessage(message) {
+  const ul = room.querySelector("ul");
+  const li = document.createElement("li");
+  li.innerText = message;
+  ul.appendChild(li);
+}
+
 function handleRoomSubmit(event) {
   event.preventDefault();
   const input = form.querySelector("input");
@@ -24,3 +31,7 @@ function handleRoomSubmit(event) {
 }
 
 form.addEventListener("submit", handleRoomSubmit);
+
+socket.on("welcome", () => {
+  addMessage("익명(이)가 입장했습니다.");
+});
