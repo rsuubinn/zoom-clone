@@ -13,6 +13,8 @@ function showRoom() {
   room.hidden = false;
   const h3 = room.querySelector("h3");
   h3.innerText = `방이름 : ${roomName}`;
+  const form = room.querySelector("form");
+  form.addEventListener("submit", handleMessageSubmit);
 }
 
 function addMessage(message) {
@@ -20,6 +22,16 @@ function addMessage(message) {
   const li = document.createElement("li");
   li.innerText = message;
   ul.appendChild(li);
+}
+
+function handleMessageSubmit(event) {
+  event.preventDefault();
+  const input = room.querySelector("input");
+  const value = input.value;
+  socket.emit("new_message", roomName, input.value, () => {
+    addMessage(`나 : ${value}`);
+  });
+  input.value = "";
 }
 
 function handleRoomSubmit(event) {
@@ -34,4 +46,12 @@ form.addEventListener("submit", handleRoomSubmit);
 
 socket.on("welcome", () => {
   addMessage("익명(이)가 입장했습니다.");
+});
+
+socket.on("bye", () => {
+  addMessage("익명(이)가 퇴장했습니다.");
+});
+
+socket.on("new_message", (message) => {
+  addMessage(message);
 });
