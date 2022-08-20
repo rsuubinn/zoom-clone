@@ -7,6 +7,7 @@ const form = welcome.querySelector("form");
 room.hidden = true;
 
 let roomName;
+let nickName;
 
 function showRoom() {
   welcome.hidden = true;
@@ -36,20 +37,21 @@ function handleMessageSubmit(event) {
 
 function handleRoomSubmit(event) {
   event.preventDefault();
-  const input = form.querySelector("input");
-  socket.emit("enter_room", input.value, showRoom);
-  roomName = input.value;
-  input.value = "";
+  const nickNameinput = form.querySelector("#nickname");
+  const roomNameInput = form.querySelector("#roomname");
+  socket.emit("enter_room", roomNameInput.value, nickNameinput.value, showRoom);
+  roomName = roomNameInput.value;
+  nickName = nickNameinput.value;
 }
 
 form.addEventListener("submit", handleRoomSubmit);
 
-socket.on("welcome", () => {
-  addMessage("익명(이)가 입장했습니다.");
+socket.on("welcome", (nickname) => {
+  addMessage(`${nickname}(이)가 입장했습니다.`);
 });
 
-socket.on("bye", () => {
-  addMessage("익명(이)가 퇴장했습니다.");
+socket.on("bye", (nickname) => {
+  addMessage(`${nickname}(이)가 퇴장했습니다.`);
 });
 
 socket.on("new_message", (message) => {

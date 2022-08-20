@@ -12,12 +12,13 @@ html(lang="en")
         main
             div#welcome
                 form
-                    input(placeholder="방이름" type="text" required)
+                    input(id="nickname" placeholder="닉네임" type="text" required)
+                    input(id="roomname" placeholder="방이름" type="text" required)
                     button 입장하기
             div#room
                 h3
                 ul
-                form
+                form#message
                     input(placeholder="메세지를 입력하세요." type="text" required)
                     button 보내기
         script(src="/socket.io/socket.io.js")
