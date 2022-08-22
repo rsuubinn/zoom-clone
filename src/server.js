@@ -29,17 +29,22 @@ function publicRooms() {
 }
 
 wsServer.on("connection", (socket) => {
+  wsServer.sockets.emit("room_change", publicRooms());
   socket["nickname"] = "익명";
   socket.on("enter_room", (roomName, nickName, done) => {
     socket.join(roomName);
     socket["nickname"] = nickName;
     done();
     socket.to(roomName).emit("welcome", socket.nickname);
+    wsServer.sockets.emit("room_change", publicRooms());
   });
   socket.on("disconnecting", () => {
     socket.rooms.forEach((room) => {
       socket.to(room).emit("bye", socket.nickname);
     });
+  });
+  socket.on("disconnect", () => {
+    wsServer.sockets.emit("room_change", publicRooms());
   });
   socket.on("new_message", (roomName, message, done) => {
     socket.to(roomName).emit("new_message", `${socket.nickname} : ${message}`);
