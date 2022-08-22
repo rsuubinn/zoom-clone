@@ -1,76 +1,46 @@
 const socket = io();
 
-const welcome = document.getElementById("welcome");
-const room = document.getElementById("room");
-const form = welcome.querySelector("form");
+const myFace = document.getElementById("myFace");
+const muteBtn = document.getElementById("mute");
+const cameraBtn = document.getElementById("camera");
 
-room.hidden = true;
+let myStream;
+let muted = false;
+let cameraOff = false;
 
-let roomName;
-let nickName;
+async function getMedia() {
+  try {
+    myStream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: true,
+    });
 
-function showRoom() {
-  welcome.hidden = true;
-  room.hidden = false;
-  const h3 = room.querySelector("h3");
-  h3.innerText = `방이름 : ${roomName}`;
-  const form = room.querySelector("form");
-  form.addEventListener("submit", handleMessageSubmit);
-}
-
-function addMessage(message) {
-  const ul = room.querySelector("ul");
-  const li = document.createElement("li");
-  li.innerText = message;
-  ul.appendChild(li);
-}
-
-function handleMessageSubmit(event) {
-  event.preventDefault();
-  const input = room.querySelector("input");
-  const value = input.value;
-  socket.emit("new_message", roomName, input.value, () => {
-    addMessage(`나 : ${value}`);
-  });
-  input.value = "";
-}
-
-function handleRoomSubmit(event) {
-  event.preventDefault();
-  const nickNameinput = form.querySelector("#nickname");
-  const roomNameInput = form.querySelector("#roomname");
-  socket.emit("enter_room", roomNameInput.value, nickNameinput.value, showRoom);
-  roomName = roomNameInput.value;
-  nickName = nickNameinput.value;
-}
-
-form.addEventListener("submit", handleRoomSubmit);
-
-socket.on("welcome", (nickname, newCount) => {
-  const h3 = room.querySelector("h3");
-  h3.innerText = `${roomName}(${newCount})`;
-  addMessage(`${nickname}(이)가 입장했습니다.`);
-});
-
-socket.on("bye", (nickname, newCount) => {
-  const h3 = room.querySelector("h3");
-  h3.innerText = `${roomName}(${newCount})`;
-  addMessage(`${nickname}(이)가 퇴장했습니다.`);
-});
-
-socket.on("new_message", (message) => {
-  addMessage(message);
-});
-
-socket.on("room_change", (rooms) => {
-  const roomList = welcome.querySelector("ul");
-  roomList.innerHTML = "";
-  if (rooms.length === 0) {
-    return;
+    myFace.srcObject = myStream;
+  } catch (error) {
+    console.log(error);
   }
-  rooms.forEach((room) => {
-    const li = document.createElement("li");
-    li.innerText = room;
-    roomList.append(li);
-  });
-});
+}
+
+getMedia();
+
+function handleMuteClick() {
+  if (!muted) {
+    muted = true;
+    muteBtn.innerText = "음소거 해제";
+  } else {
+    muted = false;
+    muteBtn.innerText = "음소거";
+  }
+}
+function handleCameraClick() {
+  if (cameraOff) {
+    cameraOff = false;
+    cameraBtn.innerText = "카메라 끄기";
+  } else {
+    cameraOff = true;
+    cameraBtn.innerText = "카메라 켜기";
+  }
+}
+
+muteBtn.addEventListener("click", handleMuteClick);
+cameraBtn.addEventListener("click", handleCameraClick);

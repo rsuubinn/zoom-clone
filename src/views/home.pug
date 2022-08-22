@@ -10,18 +10,9 @@ html(lang="en")
         header
             h1 Zoom 
         main
-            div#welcome
-                form
-                    input(id="nickname" placeholder="닉네임" type="text" required)
-                    input(id="roomname" placeholder="방이름" type="text" required)
-                    button 입장하기
-                h4 방 목록
-                ul
-            div#room
-                h3
-                ul
-                form#message
-                    input(placeholder="메세지를 입력하세요." type="text" required)
-                    button 보내기
+            div#myStream
+                video#myFace(autoplay,playsinline, muted, width="100", height="100")
+                button#mute 음소거
+                button#camera 카메라 끄기
         script(src="/socket.io/socket.io.js")
         script(src="/public/js/app.js") 
