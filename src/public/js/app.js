@@ -107,10 +107,20 @@ function handleWelcomeSubmit(event) {
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 
+// Socket
+
 socket.on("welcome", async () => {
   const offer = await myPeerConnection.createOffer();
+  myPeerConnection.setLocalDescription(offer);
+  console.log("Sent the offer");
+  socket.emit("offer", offer, roomName);
+});
+
+socket.on("emit", (offer) => {
   console.log(offer);
 });
+
+//WebRTC
 
 function makeConnection() {
   myPeerConnection = new RTCPeerConnection();
