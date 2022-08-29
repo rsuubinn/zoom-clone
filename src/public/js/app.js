@@ -5,6 +5,7 @@ const muteBtn = document.getElementById("mute");
 const cameraBtn = document.getElementById("camera");
 const cameraSelect = document.getElementById("cameras");
 const call = document.getElementById("call");
+const messages = document.getElementById("messages");
 
 call.hidden = true;
 
@@ -133,7 +134,9 @@ socket.on("offer", async (offer) => {
   myPeerConnection.addEventListener("datachannel", (event) => {
     myDataChannel = event.channel;
     myDataChannel.addEventListener("message", (event) => {
-      console.log(event.data);
+      const li = document.createElement("li");
+      li.innerText = event.data;
+      messages.append(li);
     });
   });
   console.log("Received the offer");
