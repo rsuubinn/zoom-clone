@@ -6,6 +6,7 @@ const cameraBtn = document.getElementById("camera");
 const cameraSelect = document.getElementById("cameras");
 const call = document.getElementById("call");
 const messages = document.getElementById("messages");
+const screenBtn = document.getElementById("screen");
 
 call.hidden = true;
 
@@ -93,9 +94,14 @@ async function handleCameraChange() {
     videoSender.replaceTrack(videoTrack);
   }
 }
+
+async function handleScreenShare() {
+  myStream = await getLocalScreenCaptureStream();
+}
 muteBtn.addEventListener("click", handleMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
 cameraSelect.addEventListener("input", handleCameraChange);
+screenBtn.addEventListener("click", handleScreenShare);
 
 const welcome = document.getElementById("welcome");
 const welcomeForm = welcome.querySelector("form");
