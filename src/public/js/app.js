@@ -150,14 +150,23 @@ welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 
 const chat = document.getElementById("chat");
 const chatForm = chat.querySelector("form");
+const chatLists = chat.querySelector("ul");
 
 function handleChatSubmit(event) {
   event.preventDefault();
   const input = chatForm.querySelector("input");
   const li = document.createElement("li");
+  const message = input.value;
   li.innerText = input.value;
-  chatForm.append(li);
+  chatLists.append(li);
   input.value = "";
+  myDataChannel.send(message);
+}
+
+function handleMessage(message) {
+  const li = document.createElement("li");
+  li.innerText = message;
+  chatLists.append(li);
 }
 
 chatForm.addEventListener("submit", handleChatSubmit);
@@ -166,7 +175,7 @@ chatForm.addEventListener("submit", handleChatSubmit);
 socket.on("welcome", async () => {
   myDataChannel = await myPeerConnection.createDataChannel("chat");
   myDataChannel.addEventListener("message", (event) => {
-    console.log(event);
+    handleMessage(event.data);
   });
   const offer = await myPeerConnection.createOffer();
   myPeerConnection.setLocalDescription(offer);
@@ -177,7 +186,9 @@ socket.on("welcome", async () => {
 socket.on("offer", async (offer) => {
   myPeerConnection.addEventListener("datachannel", (event) => {
     myDataChannel = event.channel;
-    myDataChannel.addEventListener("message", (event) => {});
+    myDataChannel.addEventListener("message", (event) => {
+      handleMessage(event.data);
+    });
   });
   console.log("Received the offer");
   myPeerConnection.setRemoteDescription(offer);
