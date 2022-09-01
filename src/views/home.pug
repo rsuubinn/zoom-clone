@@ -11,6 +11,9 @@ html(lang="en")
             h1 Zoom 
         main
             div#welcome
+                div#rooms
+                    h3 방 목록
+                    ul
                 form
                     input(placeholder="방 이름" type="text" required)
                     button 입장하기
@@ -27,6 +30,7 @@ html(lang="en")
                     form
                         input(placeholder="메세지를 입력하세요." type="text" required)
                         button 보내기
+                button#exit 나가기
 
         script(src="/socket.io/socket.io.js")
         script(src="/public/js/app.js") 

@@ -139,9 +139,12 @@ async function initCall() {
 async function handleWelcomeSubmit(event) {
   event.preventDefault();
   const input = welcomeForm.querySelector("input");
+  const li = document.createElement("li");
   await initCall();
   socket.emit("join_room", input.value);
   roomName = input.value;
+  li.innerText = input.value;
+  roomList.append(li);
 }
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
@@ -155,11 +158,7 @@ const chatLists = chat.querySelector("ul");
 function handleChatSubmit(event) {
   event.preventDefault();
   const input = chatForm.querySelector("input");
-  const li = document.createElement("li");
   const message = input.value;
-  li.innerText = input.value;
-  chatLists.append(li);
-  input.value = "";
   myDataChannel.send(message);
 }
 
@@ -171,7 +170,31 @@ function handleMessage(message) {
 
 chatForm.addEventListener("submit", handleChatSubmit);
 
+// Exit
+
+const exitBtn = call.querySelector("#exit");
+
+function handleExitBtn() {
+  socket.emit("exit");
+}
+
+exitBtn.addEventListener("click", handleExitBtn);
+
 // Socket
+
+socket.on("update_rooms", (rooms) => {
+  const roomList = welcome.querySelector("#rooms ul");
+  if (rooms.length === 0) {
+    const li = document.createElement("li");
+    li.innerText = "방이 존재하지 않습니다.";
+    roomList.append(li);
+  }
+  rooms.forEach((room) => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.append(li);
+  });
+});
 socket.on("welcome", async () => {
   myDataChannel = await myPeerConnection.createDataChannel("chat");
   myDataChannel.addEventListener("message", (event) => {
@@ -181,6 +204,9 @@ socket.on("welcome", async () => {
   myPeerConnection.setLocalDescription(offer);
   console.log("Sent the offer");
   socket.emit("offer", offer, roomName);
+  const li = document.createElement("li");
+  li.innerText = input.value;
+  chatLists.append(li);
 });
 
 socket.on("offer", async (offer) => {
@@ -207,6 +233,8 @@ socket.on("ice", (ice) => {
   console.log("Received candidate");
   myPeerConnection.addIceCandidate(ice);
 });
+
+socket.on("room_change", (rooms) => {});
 
 //WebRTC
 
