@@ -50,6 +50,9 @@ wsServer.on("connection", (socket) => {
   socket.on("ice", (ice, roomName) => {
     socket.to(roomName).emit("ice", ice);
   });
+  socket.on("disconnecting", () => {
+    wsServer.sockets.emit("room_change", getPublicRooms());
+  });
   socket.on("disconnect", () => {
     wsServer.sockets.emit("room_change", getPublicRooms());
   });

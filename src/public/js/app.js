@@ -184,16 +184,20 @@ exitBtn.addEventListener("click", handleExitBtn);
 
 socket.on("update_rooms", (rooms) => {
   const roomList = welcome.querySelector("#rooms ul");
+  roomList.innerText = "";
   if (rooms.length === 0) {
     const li = document.createElement("li");
     li.innerText = "방이 존재하지 않습니다.";
     roomList.append(li);
+  } else {
+    console.log(rooms);
+    rooms.forEach((room) => {
+      console.log(room);
+      const button = document.createElement("button");
+      button.innerText = `${room}`;
+      roomList.append(button);
+    });
   }
-  rooms.forEach((room) => {
-    const li = document.createElement("li");
-    li.innerText = room;
-    roomList.append(li);
-  });
 });
 socket.on("welcome", async () => {
   myDataChannel = await myPeerConnection.createDataChannel("chat");
